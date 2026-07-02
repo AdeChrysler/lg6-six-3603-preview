@@ -1,17 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
-  --brand-black: #050505;
-  --brand-cream: #e8dfc8;
-  --brand-gold: #d4af6a;
-  --brand-danger: #c4513a;
-  --brand-action: #39634f;
-  --brand-panel: rgba(255, 255, 255, 0.045);
-  --brand-line: rgba(232, 223, 200, 0.14);
-  --brand-muted: rgba(232, 223, 200, 0.74);
-  --brand-font-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
-  --brand-font-ui: "Manrope", "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  --bg: #0a0a0a;
+  --paper: #f5efdf;
+  --ink: #111111;
+  --accent: #d6fd3a;
+  --panel: rgba(255, 255, 255, 0.05);
+  --panel-soft: rgba(255, 255, 255, 0.028);
+  --line: rgba(245, 239, 223, 0.12);
+  --line-strong: rgba(214, 253, 58, 0.18);
+  --muted: rgba(245, 239, 223, 0.66);
+  --muted-strong: rgba(245, 239, 223, 0.82);
+  --brand-font-display: "Instrument Serif", "Times New Roman", serif;
+  --brand-font-ui: "Plus Jakarta Sans", "Helvetica Neue", sans-serif;
 }
 
 * {
@@ -20,16 +22,16 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--brand-black);
+  background: var(--bg);
 }
 
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(212, 175, 106, 0.14), transparent 26%),
-    radial-gradient(circle at top right, rgba(196, 81, 58, 0.1), transparent 22%),
-    linear-gradient(180deg, #0b0b0b 0%, #050505 100%);
-  color: var(--brand-cream);
+    radial-gradient(circle at top left, rgba(214, 253, 58, 0.08), transparent 30%),
+    radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.05), transparent 28%),
+    linear-gradient(180deg, #111111 0%, #0a0a0a 40%, #080808 100%);
+  color: var(--paper);
   font-family: var(--brand-font-ui);
   overflow-x: hidden;
 }
@@ -48,8 +50,8 @@ body {
 }
 
 ::selection {
-  background: rgba(212, 175, 106, 0.3);
-  color: var(--brand-cream);
+  background: rgba(214, 253, 58, 0.28);
+  color: var(--ink);
 }
 
 a {
@@ -73,37 +75,65 @@ summary {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 120px 120px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 110px 110px;
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2), transparent 100%);
-  opacity: 0.24;
+  opacity: 0.18;
 }
 
-.hero-portrait-frame::after {
+.campaign-glow {
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(80px);
+  opacity: 0.5;
+}
+
+.campaign-glow-left {
+  left: -12rem;
+  top: 8rem;
+  height: 20rem;
+  width: 20rem;
+  background: rgba(214, 253, 58, 0.08);
+}
+
+.campaign-glow-right {
+  right: -10rem;
+  top: 24rem;
+  height: 18rem;
+  width: 18rem;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.hero-frame::after {
   content: "";
   position: absolute;
-  right: 2rem;
-  top: 2rem;
-  width: 9rem;
-  height: 9rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(212, 175, 106, 0.18);
-  opacity: 0.45;
+  left: -3rem;
+  top: 4rem;
+  height: 22rem;
+  width: 1px;
+  transform: rotate(18deg);
+  background: linear-gradient(180deg, transparent, rgba(214, 253, 58, 0.6), transparent);
+  opacity: 0.8;
   pointer-events: none;
 }
 
 @keyframes hero-rise {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(20px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+select option {
+  background: #111111;
+  color: var(--paper);
 }
 
 .hero-reveal {

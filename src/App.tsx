@@ -1,5 +1,15 @@
-import { FormEvent, useMemo, useState } from 'react';
-import { ArrowRight, BadgeAlert, Check, CircleAlert, ShieldCheck } from 'lucide-react';
+import { FormEvent, ReactNode, useMemo, useState } from 'react';
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Check,
+  CircleAlert,
+  Clock3,
+  MessagesSquare,
+  Search,
+  ShieldCheck,
+  Waypoints,
+} from 'lucide-react';
 import { Badge } from './components/ui/Badge';
 import { Button } from './components/ui/Button';
 import { Card } from './components/ui/Card';
@@ -44,87 +54,95 @@ type OutcomeState = {
   fallback?: string;
 };
 
-const leakPoints = [
+const intakeSignals = [
+  'Private fit check sebelum jalur WhatsApp terbuka.',
+  'Untuk owner dengan bisnis yang sudah berjalan dan siap bicara angka.',
+  'Dirancang untuk membaca bottleneck bisnis, bukan memberi motivasi umum.',
+];
+
+const pressureSignals = [
   {
     label: 'Owner Dependency',
-    title: 'Semua keputusan tetap naik ke owner',
-    body: 'Tim terlihat jalan, tetapi hal penting maupun hal kecil tetap menunggu arah dari Anda.',
+    title: 'Keputusan penting masih parkir di owner',
+    body: 'Bisnis terlihat aktif, tetapi banyak momentum tetap berhenti sampai Anda turun tangan langsung.',
   },
   {
     label: 'Execution Drift',
-    title: 'Tim sibuk, hasil belum terasa rapi',
-    body: 'Meeting berjalan, orang bekerja, tetapi ritme eksekusi dan standar keputusan belum cukup solid.',
+    title: 'Tim sibuk, hasilnya belum terasa terkunci',
+    body: 'Ritme kerja ada, namun kualitas follow-up, prioritas, dan standar keputusan masih mudah goyah.',
   },
   {
-    label: 'Hidden Pressure',
-    title: 'Bisnis terlihat sehat, owner tetap berat',
-    body: 'Dari luar bisnis tampak tumbuh, tetapi di dalam owner sulit lepas, sulit tenang, dan sulit hadir penuh untuk keluarga.',
-  },
-];
-
-const pressureCards = [
-  {
-    title: 'Owner sulit benar-benar off',
-    body: 'Walau bisnis sudah besar, pikiran Anda tetap tertahan di operasional harian dan keputusan yang berulang.',
-  },
-  {
-    title: 'Tim masih bergantung pada Anda',
-    body: 'Tanpa owner hadir penuh, banyak hal langsung melambat karena standar keputusan belum hidup di tim.',
-  },
-  {
-    title: 'Masalah kecil terasa tidak ada habisnya',
-    body: 'Kerja ulang, miskomunikasi, prioritas berubah-ubah, dan follow-up yang lepas bikin energi owner terus terkuras.',
-  },
-  {
-    title: 'Rumah ikut merasakan bebannya',
-    body: 'Secara finansial bisnis terlihat berhasil, tetapi waktu, fokus, dan ruang mental owner makin sempit.',
+    label: 'Life Cost',
+    title: 'Secara angka naik, secara hidup belum ringan',
+    body: 'Pendapatan tumbuh, tetapi ruang pikir, waktu keluarga, dan kemampuan benar-benar off belum ikut pulih.',
   },
 ];
 
-const diagnosticModules = [
+const proofFrames = [
   {
-    title: 'Decision Flow',
-    body: 'Apakah keputusan penting punya ritme dan standar yang jelas, atau semuanya tetap naik ke owner?',
+    icon: Search,
+    title: 'Membaca titik macet paling mahal',
+    body: 'Kami mulai dari area yang paling mengunci pertumbuhan: keputusan, kontrol, dan ketergantungan owner.',
   },
   {
-    title: 'Team Execution',
-    body: 'Apakah tim benar-benar bisa jalan dengan akuntabilitas, atau hanya terlihat sibuk tanpa gerak yang tajam?',
+    icon: Waypoints,
+    title: 'Membedakan gejala dan akar masalah',
+    body: 'Masalah yang terlihat di penjualan atau tim sering hanya efek. Form ini dipakai untuk menilai sumber tekanannya.',
   },
   {
-    title: 'Business Control',
-    body: 'Apakah owner masih memegang kendali sehat atas bisnis, termasuk cash, prioritas, dan tempo pertumbuhan?',
+    icon: MessagesSquare,
+    title: 'Menyaring percakapan yang benar-benar relevan',
+    body: 'WhatsApp dibuka hanya setelah jawaban memberi sinyal bahwa percakapan lanjut memang layak diteruskan.',
+  },
+];
+
+const processSteps = [
+  {
+    step: '01',
+    title: 'Isi private fit check',
+    body: 'Enam pertanyaan singkat dipakai untuk membaca skala bisnis, tingkat urgensi, dan bentuk tekanan yang sedang Anda bawa.',
+  },
+  {
+    step: '02',
+    title: 'Sistem menentukan jalur lanjut',
+    body: 'Owner yang belum berada di fase yang tepat berhenti di halaman ini. Owner yang lolos diarahkan ke jalur WhatsApp yang sesuai.',
+  },
+  {
+    step: '03',
+    title: 'Tim membaca konteks sebelum bicara',
+    body: 'Percakapan lanjut tidak dimulai dari nol. Tim sudah punya gambaran awal tentang kondisi bisnis Anda.',
   },
 ];
 
 const fitBullets = [
   'Owner atau director dengan bisnis yang sudah berjalan dan siap bicara angka secara konkret.',
-  'Revenue bulanan sudah signifikan dan Anda merasa bisnis terlihat sukses, tetapi secara pribadi masih sulit lepas dari operasional.',
-  'Mencari kejelasan mengapa bisnis terus meminta kehadiran Anda, bukan sekadar tambahan motivasi.',
-  'Siap masuk ke percakapan awal yang relevan dengan tim Coach Ferly setelah lolos kualifikasi.',
+  'Merasa bisnis terlihat berhasil, tetapi keputusan penting masih terlalu sering kembali ke Anda.',
+  'Ingin melihat mengapa tim, ritme, dan kontrol bisnis belum benar-benar stabil.',
+  'Siap masuk ke percakapan awal yang serius jika memang fase bisnis Anda relevan.',
 ];
 
 const notFitBullets = [
-  'Belum punya bisnis berjalan atau masih tahap ide.',
-  'Mencari webinar gratis, promo, atau penawaran harga instan.',
-  'Tidak siap membuka kondisi omzet, tekanan operasional, dan pola keputusan bisnis secara jujur.',
-  'Belum punya urgensi untuk merapikan sistem bisnis dan cara kerja tim.',
+  'Masih tahap ide, baru mulai, atau belum punya bisnis berjalan.',
+  'Mencari webinar gratis, motivasi instan, atau promo cepat.',
+  'Tidak siap membuka kondisi omzet, tim, dan tekanan operasional secara jujur.',
+  'Belum punya urgensi untuk membenahi sistem bisnis dan ritme eksekusi.',
 ];
 
 const faqItems = [
   {
-    question: 'Apakah ini sesi motivasi atau webinar penjualan?',
+    question: 'Apakah ini halaman penjualan langsung atau webinar?',
     answer:
-      'Tidak. Ini jalur konsultasi awal untuk mengecek apakah kondisi bisnis Anda relevan dibahas lebih lanjut bersama tim Coach Ferly.',
+      'Bukan. Ini halaman penyaringan awal untuk melihat apakah percakapan lanjutan memang relevan dengan fase bisnis Anda sekarang.',
   },
   {
-    question: 'Kenapa harus isi form dulu sebelum WhatsApp?',
+    question: 'Kenapa WhatsApp baru terbuka setelah form?',
     answer:
-      'Karena tim perlu membedakan owner yang masih perlu nurture, owner yang cocok ke jalur prioritas 2, dan owner yang sudah siap ke jalur prioritas utama.',
+      'Karena jalur percakapan harus dibedakan. Owner yang masih terlalu awal, owner yang masuk prioritas kedua, dan owner yang masuk prioritas utama tidak boleh diperlakukan sama.',
   },
   {
-    question: 'Apa yang akan dilihat lebih dulu dalam konsultasi awal?',
+    question: 'Apa yang dinilai dari jawaban saya?',
     answer:
-      'Tiga area utama: owner dependency, ritme eksekusi tim, dan kontrol bisnis, ditambah besarnya dampak masalah dan urgensi perbaikannya.',
+      'Skala bisnis, tekanan yang paling terasa, seberapa besar dampaknya, dan seberapa cepat Anda ingin membereskan situasinya.',
   },
 ];
 
@@ -147,7 +165,7 @@ const requiredFields: Array<{ key: FieldName; label: string }> = [
 ];
 
 const fieldBaseClasses =
-  'w-full rounded-2xl border border-[var(--brand-line)] bg-[rgba(255,255,255,0.04)] px-4 py-3 text-sm text-[var(--brand-cream)] outline-none transition focus:border-[var(--brand-gold)] focus:ring-2 focus:ring-[rgba(212,175,106,0.2)]';
+  'w-full rounded-2xl border border-[var(--line)] bg-[var(--panel-soft)] px-4 py-3.5 text-sm text-[var(--paper)] outline-none transition duration-200 placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:bg-[rgba(255,255,255,0.06)] focus:ring-4 focus:ring-[rgba(214,253,58,0.12)]';
 
 const trimForm = (form: FormState): FormState => ({
   omzet: form.omzet,
@@ -177,10 +195,10 @@ const getOutcome = (form: FormState): OutcomeState => {
   if (form.omzet === '<1 Miliar') {
     return {
       kind: 'reject',
-      title: 'Saat Ini Belum Jalur Yang Tepat',
+      title: 'Fase Bisnis Anda Belum Masuk Jalur Ini',
       body:
-        'Berdasarkan skala omzet yang Anda pilih, sesi ini belum menjadi jalur paling tepat. Fokus terbaik saat ini adalah memperkuat offer, penjualan harian, dan ritme eksekusi sebelum masuk ke pembenahan sistem yang lebih berat.',
-      ctaLabel: 'Kembali Ke Form',
+        'Berdasarkan omzet yang Anda pilih, fokus terbaik saat ini biasanya masih di penguatan offer, ritme penjualan, dan eksekusi harian. Jalur konsultasi ini dirancang untuk owner yang sudah masuk tekanan sistem dan owner dependency yang lebih berat.',
+      ctaLabel: 'Periksa Lagi Jawaban',
     };
   }
 
@@ -189,7 +207,7 @@ const getOutcome = (form: FormState): OutcomeState => {
       kind: 'priority-2',
       title: 'Anda Masuk Jalur Prioritas 2',
       body:
-        'Bisnis Anda sudah melewati fase awal. Tim Coach Ferly dapat membantu menilai apakah sesi lanjut ini tepat untuk membantu Anda membangun bisnis yang tetap bertumbuh tanpa terus bergantung pada Anda di setiap titik.',
+        'Bisnis Anda sudah melewati fase awal. Langkah berikutnya adalah percakapan awal untuk menilai apakah masalah owner dependency, ritme tim, dan kontrol bisnis Anda memang cukup relevan untuk dibahas lebih jauh.',
       ctaLabel: 'Lanjutkan Via WhatsApp',
       href: `${SECONDARY_CTA_URL}?text=${encodeURIComponent(buildPriorityTwoMessage(form))}`,
       fallback: 'Jika WhatsApp tidak terbuka otomatis, gunakan tombol di bawah untuk melanjutkan manual.',
@@ -200,7 +218,7 @@ const getOutcome = (form: FormState): OutcomeState => {
     kind: 'priority-main',
     title: 'Anda Masuk Jalur Prioritas Utama',
     body:
-      'Skala bisnis Anda sudah cukup besar untuk masuk ke percakapan strategis yang lebih serius. Lanjutkan ke WhatsApp agar tim Coach Ferly bisa membaca konteks Anda sebelum sesi.',
+      'Skala bisnis Anda sudah cukup besar untuk masuk ke percakapan yang lebih strategis. Lanjutkan ke WhatsApp prioritas agar tim bisa membaca konteks Anda sebelum sesi berikutnya dimulai.',
     ctaLabel: 'Lanjutkan Ke WhatsApp Prioritas',
     href: PRIMARY_CTA_URL,
     fallback: 'Jika tab WhatsApp tidak muncul otomatis, gunakan tombol prioritas di bawah.',
@@ -211,24 +229,54 @@ const scrollToId = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
+const SectionLabel = ({ children, className }: { children: ReactNode; className?: string }) => (
+  <Badge
+    variant="outline"
+    className={cn(
+      'border-[var(--line-strong)] bg-[rgba(255,255,255,0.02)] px-4 py-1.5 text-[11px] uppercase tracking-[0.22em] text-[var(--muted-strong)]',
+      className,
+    )}
+  >
+    {children}
+  </Badge>
+);
+
+const SectionHeading = ({
+  label,
+  title,
+  body,
+}: {
+  label: string;
+  title: string;
+  body: string;
+}) => (
+  <div className="space-y-4">
+    <SectionLabel>{label}</SectionLabel>
+    <h2 className="font-display text-4xl leading-[0.95] tracking-[-0.05em] text-[var(--paper)] sm:text-5xl lg:text-6xl">
+      {title}
+    </h2>
+    <p className="max-w-2xl text-base leading-8 text-[var(--muted)] sm:text-lg">{body}</p>
+  </div>
+);
+
 const Field = ({
   children,
   error,
   htmlFor,
   label,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   error?: string;
   htmlFor: string;
   label: string;
 }) => (
-  <div className="space-y-2">
-    <label htmlFor={htmlFor} className="font-ui text-sm font-semibold text-[var(--brand-cream)]">
+  <div className="space-y-2.5">
+    <label htmlFor={htmlFor} className="font-ui text-sm font-semibold text-[var(--paper)]">
       {label}
     </label>
     {children}
     {error ? (
-      <p id={`${htmlFor}-error`} className="text-sm text-[var(--brand-danger)]">
+      <p id={`${htmlFor}-error`} className="text-sm text-[var(--paper)]/78">
         {error}
       </p>
     ) : null}
@@ -297,22 +345,26 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--brand-black)] text-[var(--brand-cream)]">
-      <div className="campaign-bg" aria-hidden="true" />
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--paper)]">
+      <div className="campaign-grid" aria-hidden="true" />
+      <div className="campaign-glow campaign-glow-left" aria-hidden="true" />
+      <div className="campaign-glow campaign-glow-right" aria-hidden="true" />
 
-      <header className="sticky top-0 z-40 border-b border-[var(--brand-line)] bg-[rgba(5,5,5,0.82)] backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[rgba(10,10,10,0.82)] backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
-          <div>
-            <p className="font-ui text-[10px] tracking-[0.28em] text-[var(--brand-muted)]">
+          <div className="space-y-1">
+            <p className="font-ui text-[10px] uppercase tracking-[0.28em] text-[var(--muted)]">
               Private fit check for scaling owners
             </p>
-            <p className="font-display text-lg text-[var(--brand-cream)]">Coach Ferly F. Raya</p>
+            <p className="font-display text-[1.45rem] leading-none text-[var(--paper)]">
+              Coach Ferly F. Raya
+            </p>
           </div>
 
           <Button
             variant="primary"
             size="lg"
-            className="h-11 px-5 text-sm sm:h-12 sm:px-7 sm:text-base"
+            className="h-11 px-5 text-sm sm:h-12 sm:px-7"
             onClick={() => scrollToId('qualification-form')}
           >
             Isi Form Dulu
@@ -321,102 +373,316 @@ const App = () => {
       </header>
 
       <main>
-        <section className="relative overflow-hidden px-5 pb-20 pt-10 sm:px-6 sm:pt-14 lg:px-8 lg:pb-28 lg:pt-16">
-          <div className="mx-auto grid w-full max-w-7xl items-start gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(380px,0.98fr)] lg:gap-8">
-            <div className="relative z-10 flex flex-col gap-8">
-              <div className="hero-reveal">
-                <Badge className="border-[var(--brand-gold)]/25 bg-[var(--brand-gold)]/10 px-4 py-1 text-[11px] tracking-[0.22em] text-[var(--brand-gold)]">
-                  Untuk Owner Bisnis Multi-Miliar
-                </Badge>
-              </div>
+        <section className="relative overflow-hidden px-5 pb-16 pt-8 sm:px-6 sm:pt-12 lg:px-8 lg:pb-20 lg:pt-14">
+          <div className="mx-auto grid w-full max-w-7xl items-start gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
+            <div className="space-y-8">
+              <div className="hero-reveal space-y-6">
+                <SectionLabel className="border-[var(--accent)]/20 bg-[rgba(214,253,58,0.08)] text-[var(--accent)]">
+                  Untuk owner bisnis yang sudah besar
+                </SectionLabel>
 
-              <div className="hero-reveal hero-reveal-delay-1 space-y-6">
-                <div className="space-y-4">
-                  <h1 className="font-display text-[2.45rem] leading-[0.96] tracking-[-0.04em] text-[var(--brand-cream)] sm:text-[4.35rem] lg:max-w-4xl lg:text-[5rem]">
-                    Bisnis Terlihat Sudah Jadi,
-                    <span className="block text-[var(--brand-gold)]">Tapi Anda Masih Sulit Lepas.</span>
+                <div className="space-y-5">
+                  <h1 className="font-display text-[3rem] leading-[0.88] tracking-[-0.06em] text-[var(--paper)] sm:text-[4.5rem] lg:max-w-4xl lg:text-[6rem]">
+                    Bisnisnya sudah jalan.
+                    <span className="block text-[var(--accent)]">Ownernya masih belum benar-benar lepas.</span>
                   </h1>
-                  <p className="max-w-2xl font-ui text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                    Dari luar bisnis tampak tumbuh, tetapi di dalam owner masih jadi pusat keputusan,
-                    sulit benar-benar off, dan keluarga ikut merasakan bebannya. Masalahnya biasanya
-                    bukan kurang kerja keras, tetapi sistem bisnis yang belum cukup kuat.
+                  <p className="max-w-2xl text-base leading-8 text-[var(--muted)] sm:text-lg">
+                    Jika bisnis tumbuh tetapi semua keputusan tetap berat di Anda, masalahnya biasanya
+                    bukan kurang kerja keras. Masalahnya sistem bisnis belum cukup kuat untuk membuat
+                    owner tenang, tim rapi, dan pertumbuhan terasa sehat.
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-line)] bg-white/5 px-4 py-2 text-sm text-[var(--brand-cream)]">
-                    <ShieldCheck className="h-4 w-4 text-[var(--brand-gold)]" />
-                    Untuk owner yang bisnisnya sudah besar, tetapi hidupnya belum terasa lebih ringan
-                  </div>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-line)] bg-white/5 px-4 py-2 text-sm text-[var(--brand-muted)]">
-                    <BadgeAlert className="h-4 w-4 text-[var(--brand-danger)]" />
-                    Tidak ada WhatsApp sebelum form lengkap
-                  </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {intakeSignals.map((item) => (
+                    <Card
+                      key={item}
+                      hoverEffect={false}
+                      className="rounded-[1.5rem] border-[var(--line)] bg-[var(--panel-soft)] p-4"
+                    >
+                      <p className="text-sm leading-6 text-[var(--muted-strong)]">{item}</p>
+                    </Card>
+                  ))}
                 </div>
               </div>
 
-              <div className="hero-reveal hero-reveal-delay-2 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="hero-reveal hero-reveal-delay-1 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <Button
                   variant="primary"
-                  size="lg"
-                  className="h-14 px-8 text-base shadow-[0_24px_60px_rgba(212,175,106,0.22)]"
+                  size="xl"
+                  className="shadow-[0_24px_70px_rgba(214,253,58,0.18)]"
                   onClick={() => scrollToId('qualification-form')}
                 >
                   Cek Kecocokan Saya
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-                <p className="font-ui text-sm text-[var(--brand-muted)]">
-                  Jalur konsultasi ditentukan setelah kualifikasi selesai.
+                <p className="max-w-md text-sm leading-7 text-[var(--muted)]">
+                  Tidak ada jalur WhatsApp langsung. Sistem membuka jalur lanjut hanya setelah
+                  kualifikasi selesai.
                 </p>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
-                {leakPoints.map((item) => (
+              <div className="hero-reveal hero-reveal-delay-2 grid gap-4 md:grid-cols-3">
+                {pressureSignals.map((item) => (
                   <Card
                     key={item.label}
-                    className="border-[var(--brand-line)] bg-[var(--brand-panel)] p-5 shadow-[0_30px_80px_rgba(0,0,0,0.24)]"
+                    className="rounded-[1.8rem] border-[var(--line)] bg-[var(--panel)] p-6"
                   >
-                    <p className="mb-3 font-ui text-[11px] uppercase tracking-[0.28em] text-[var(--brand-danger)]">
+                    <p className="mb-3 font-ui text-[11px] uppercase tracking-[0.24em] text-[var(--accent)]">
                       {item.label}
                     </p>
-                    <h2 className="font-display text-2xl text-[var(--brand-cream)]">{item.title}</h2>
-                    <p className="mt-3 text-sm leading-7 text-[var(--brand-muted)]">{item.body}</p>
+                    <h2 className="font-display text-[2rem] leading-[0.95] text-[var(--paper)]">
+                      {item.title}
+                    </h2>
+                    <p className="mt-4 text-sm leading-7 text-[var(--muted)]">{item.body}</p>
                   </Card>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-6 lg:sticky lg:top-28">
-              <section
-                id="qualification-form"
-                aria-labelledby="form-title"
-                className="rounded-[2rem] border border-[var(--brand-line)] bg-[rgba(8,8,8,0.92)] p-6 shadow-[0_40px_120px_rgba(0,0,0,0.42)] backdrop-blur-xl sm:p-7"
-              >
-                <div className="space-y-4">
-                  <Badge className="border-[var(--brand-gold)]/25 bg-[var(--brand-gold)]/10 px-4 py-1 tracking-[0.2em] text-[var(--brand-gold)]">
-                    Private Fit Check
-                  </Badge>
-                  <div className="space-y-2">
-                    <h2 id="form-title" className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)]">
-                      Lihat Apakah Sesi Ini Tepat Untuk Fase Bisnis Anda
-                    </h2>
-                    <p className="text-sm leading-7 text-[var(--brand-muted)] sm:text-base">
-                      Jawab enam pertanyaan singkat dan privat. Ini membantu tim menilai apakah
-                      percakapan lanjut memang relevan untuk fase bisnis Anda sekarang.
-                    </p>
+            <div className="hero-reveal hero-reveal-delay-2 lg:sticky lg:top-28">
+              <div className="hero-frame relative overflow-hidden rounded-[2rem] border border-[var(--line)] bg-[var(--panel)] p-4 shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
+                <div className="absolute -right-16 top-10 h-40 w-40 rotate-12 rounded-[2rem] border border-[var(--line-strong)] bg-[rgba(214,253,58,0.08)]" />
+
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-[var(--line)] bg-[#101010]">
+                  <div className="absolute inset-x-5 top-5 z-20 flex items-center justify-between rounded-full border border-[var(--line)] bg-[rgba(8,8,8,0.78)] px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-[var(--muted)] backdrop-blur">
+                    <span>Controlled private intake</span>
+                    <span className="text-[var(--accent)]">Gate active</span>
                   </div>
 
-                  <div className="rounded-2xl border border-[var(--brand-line)] bg-white/5 p-4">
-                    <div className="mb-3 flex items-center justify-between gap-4 text-sm text-[var(--brand-muted)]">
-                      <span>{completedCount}/6 bidang terisi</span>
-                      <span>Kelayakan privat</span>
-                    </div>
-                    <div className="h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(214,253,58,0.12),transparent_34%)]" />
+                  <img
+                    src="/coach-ferly.png"
+                    alt="Coach Ferly F. Raya"
+                    className="h-[520px] w-full object-cover object-center sm:h-[620px] lg:h-[720px]"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-52 bg-[linear-gradient(180deg,rgba(10,10,10,0),rgba(10,10,10,0.95))]" />
+                </div>
+
+                <Card
+                  hoverEffect={false}
+                  className="relative z-20 -mt-24 ml-auto max-w-[330px] rounded-[1.7rem] border-[var(--line)] bg-[rgba(14,14,14,0.94)] p-5 backdrop-blur-xl lg:-mt-36"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="font-ui text-[11px] uppercase tracking-[0.22em] text-[var(--accent)]">
+                      What gets screened
+                    </p>
+                    <ShieldCheck className="h-4 w-4 text-[var(--accent)]" />
+                  </div>
+
+                  <div className="mt-5 space-y-3">
+                    {[
+                      'Skala bisnis dan kesiapan bicara angka',
+                      'Tekanan owner dependency yang paling terasa',
+                      'Urgensi untuk merapikan tim dan sistem bisnis',
+                    ].map((item) => (
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-gold-500 to-gold-600 transition-all"
-                        style={{ width: `${(completedCount / 6) * 100}%` }}
-                      />
-                    </div>
+                        key={item}
+                        className="flex items-start gap-3 rounded-2xl border border-[var(--line)] bg-[var(--panel-soft)] px-4 py-3"
+                      >
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--accent)]" />
+                        <p className="text-sm leading-6 text-[var(--muted-strong)]">{item}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 py-18 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)]">
+            <SectionHeading
+              label="Problem Mirror"
+              title="Masalahnya bukan bisnis tidak tumbuh. Masalahnya owner masih jadi mesin penopang utama."
+              body="Ketika bisnis makin besar tetapi semua hal penting tetap menunggu Anda, pertumbuhan mulai memakan hidup owner sendiri. Di titik ini, yang dibutuhkan bukan semangat tambahan, tetapi pembacaan sistem yang jujur."
+            />
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {pressureSignals.map((item, index) => (
+                <Card
+                  key={item.title}
+                  className={cn(
+                    'rounded-[1.8rem] border-[var(--line)] bg-[var(--panel)] p-6',
+                    index === 1 ? 'sm:translate-y-8' : '',
+                  )}
+                >
+                  <p className="font-ui text-[11px] uppercase tracking-[0.24em] text-[var(--muted)]">
+                    0{index + 1}
+                  </p>
+                  <h3 className="mt-4 font-display text-[2rem] leading-[0.95] text-[var(--paper)]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-7 text-[var(--muted)]">{item.body}</p>
+                </Card>
+              ))}
+
+              <Card className="rounded-[1.8rem] border-[var(--line-strong)] bg-[rgba(214,253,58,0.08)] p-6 text-[var(--ink)]">
+                <p className="font-ui text-[11px] uppercase tracking-[0.24em] text-[rgba(10,10,10,0.58)]">
+                  The real question
+                </p>
+                <p className="mt-4 font-display text-[2.1rem] leading-[0.95] text-[var(--ink)]">
+                  “Kalau saya mundur sebentar, apakah bisnis tetap tajam?”
+                </p>
+                <p className="mt-4 text-sm leading-7 text-[rgba(10,10,10,0.72)]">
+                  Form ini dibuat untuk menguji pertanyaan itu secepat mungkin, sebelum percakapan
+                  lanjut dibuka.
+                </p>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl rounded-[2.2rem] border border-[var(--line)] bg-[var(--panel)] px-6 py-10 shadow-[0_30px_90px_rgba(0,0,0,0.32)] sm:px-8 lg:px-12 lg:py-14">
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+              <SectionHeading
+                label="Proof Structure"
+                title="Jalur ini disusun untuk membaca bottleneck, bukan menebak-nebak gejala."
+                body="Sebelum owner bicara ke tim, halaman ini sudah mengumpulkan sinyal dasar tentang skala bisnis, tekanan operasional, dan tingkat urgensi. Itu yang membuat percakapan berikutnya lebih tajam."
+              />
+
+              <div className="grid gap-4">
+                {proofFrames.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Card
+                      key={item.title}
+                      className="rounded-[1.7rem] border-[var(--line)] bg-[var(--panel-soft)] p-5 sm:p-6"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--line-strong)] bg-[rgba(214,253,58,0.08)]">
+                          <Icon className="h-5 w-5 text-[var(--accent)]" />
+                        </div>
+                        <div>
+                          <h3 className="font-display text-[1.9rem] leading-[0.95] text-[var(--paper)]">
+                            {item.title}
+                          </h3>
+                          <p className="mt-3 text-sm leading-7 text-[var(--muted)]">{item.body}</p>
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 py-18 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto w-full max-w-7xl">
+            <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <SectionHeading
+                label="Flow"
+                title="Dari tekanan owner ke jalur konsultasi yang tepat."
+                body="Narasinya sengaja lurus. Anda melihat masalahnya, memahami apa yang dibaca, lalu masuk ke gate yang menentukan apakah percakapan lanjut memang layak dibuka."
+              />
+              <div className="max-w-sm rounded-[1.6rem] border border-[var(--line)] bg-[var(--panel-soft)] px-5 py-4">
+                <p className="font-ui text-[11px] uppercase tracking-[0.22em] text-[var(--muted)]">
+                  Governing aesthetic
+                </p>
+                <p className="mt-3 font-display text-[1.9rem] leading-[0.96] text-[var(--paper)]">
+                  Controlled.
+                </p>
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  Setiap elemen dibuat terasa privat, tegas, dan tidak ramai supaya owner langsung
+                  merasa ini bukan halaman mass-market.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-3">
+              {processSteps.map((item) => (
+                <Card
+                  key={item.step}
+                  className="rounded-[1.8rem] border-[var(--line)] bg-[var(--panel)] p-6"
+                >
+                  <p className="font-ui text-[11px] uppercase tracking-[0.24em] text-[var(--accent)]">
+                    Step {item.step}
+                  </p>
+                  <h3 className="mt-4 font-display text-[2rem] leading-[0.95] text-[var(--paper)]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-7 text-[var(--muted)]">{item.body}</p>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto grid w-full max-w-7xl gap-6 lg:grid-cols-2">
+            <Card className="rounded-[2rem] border-[var(--line)] bg-[var(--panel)] p-7 lg:p-8">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--line-strong)] bg-[rgba(214,253,58,0.08)]">
+                  <BriefcaseBusiness className="h-5 w-5 text-[var(--accent)]" />
+                </div>
+                <SectionLabel className="border-[var(--line)] bg-transparent text-[var(--muted)]">
+                  Cocok Untuk Anda
+                </SectionLabel>
+              </div>
+
+              <h2 className="mt-5 font-display text-4xl leading-[0.95] tracking-[-0.05em] text-[var(--paper)]">
+                Cocok jika bisnis Anda sudah berjalan dan tekanannya mulai terasa sistemik.
+              </h2>
+
+              <ul className="mt-8 space-y-4">
+                {fitBullets.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm leading-7 text-[var(--muted)] sm:text-base">
+                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-[var(--accent)]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+
+            <Card className="rounded-[2rem] border-[var(--line)] bg-[var(--panel-soft)] p-7 lg:p-8">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--line)] bg-[rgba(255,255,255,0.03)]">
+                  <Clock3 className="h-5 w-5 text-[var(--paper)]" />
+                </div>
+                <SectionLabel className="border-[var(--line)] bg-transparent text-[var(--muted)]">
+                  Belum Untuk Anda
+                </SectionLabel>
+              </div>
+
+              <h2 className="mt-5 font-display text-4xl leading-[0.95] tracking-[-0.05em] text-[var(--paper)]">
+                Bukan untuk bisnis yang masih mencari bentuk dasar.
+              </h2>
+
+              <ul className="mt-8 space-y-4">
+                {notFitBullets.map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm leading-7 text-[var(--muted)] sm:text-base">
+                    <CircleAlert className="mt-1 h-5 w-5 flex-shrink-0 text-[var(--paper)]" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </div>
+        </section>
+
+        <section id="qualification-form" className="px-5 py-18 sm:px-6 lg:px-8 lg:py-24">
+          <div className="mx-auto w-full max-w-7xl rounded-[2.4rem] border border-[var(--line)] bg-[rgba(13,13,13,0.94)] px-6 py-8 shadow-[0_50px_140px_rgba(0,0,0,0.44)] backdrop-blur-xl sm:px-8 lg:px-10 lg:py-10">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:gap-10">
+              <div>
+                <SectionHeading
+                  label="Private Fit Check"
+                  title="Lihat apakah sesi ini memang tepat untuk fase bisnis Anda."
+                  body="Jawab enam pertanyaan singkat. Hasilnya menentukan apakah Anda berhenti di halaman ini, masuk ke jalur prioritas kedua, atau dibuka ke jalur prioritas utama."
+                />
+
+                <div className="mt-6 rounded-[1.7rem] border border-[var(--line)] bg-[var(--panel-soft)] p-4 sm:p-5">
+                  <div className="mb-3 flex items-center justify-between gap-4 text-sm text-[var(--muted)]">
+                    <span>{completedCount}/6 pertanyaan terisi</span>
+                    <span>Private qualification gate</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]" aria-hidden="true">
+                    <div
+                      className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),rgba(214,253,58,0.55))] transition-all duration-300"
+                      style={{ width: `${(completedCount / 6) * 100}%` }}
+                    />
                   </div>
                 </div>
 
@@ -498,7 +764,9 @@ const App = () => {
                         id="tantangan"
                         className={fieldBaseClasses}
                         value={form.tantangan}
-                        onChange={(event) => updateField('tantangan', event.target.value as BusinessChallenge)}
+                        onChange={(event) =>
+                          updateField('tantangan', event.target.value as BusinessChallenge)
+                        }
                         aria-invalid={Boolean(errors.tantangan)}
                         aria-describedby={errors.tantangan ? 'tantangan-error' : undefined}
                       >
@@ -510,7 +778,9 @@ const App = () => {
                         <option value="Cashflow bermasalah">Cashflow bermasalah</option>
                         <option value="Growth mentok">Growth mentok</option>
                         <option value="Kompetitor makin agresif">Kompetitor makin agresif</option>
-                        <option value="Belum yakin area yang paling menahan saya">Belum yakin area yang paling menahan saya</option>
+                        <option value="Belum yakin area yang paling menahan saya">
+                          Belum yakin area yang paling menahan saya
+                        </option>
                       </select>
                     </Field>
                   </div>
@@ -525,14 +795,18 @@ const App = () => {
                         id="dampak"
                         className={fieldBaseClasses}
                         value={form.dampak}
-                        onChange={(event) => updateField('dampak', event.target.value as BusinessImpact)}
+                        onChange={(event) =>
+                          updateField('dampak', event.target.value as BusinessImpact)
+                        }
                         aria-invalid={Boolean(errors.dampak)}
                         aria-describedby={errors.dampak ? 'dampak-error' : undefined}
                       >
                         <option value="">Pilih besarnya dampak</option>
                         <option value="Kecil, belum terlalu terasa">Kecil, belum terlalu terasa</option>
                         <option value="Sedang, mulai mengganggu">Sedang, mulai mengganggu</option>
-                        <option value="Besar, sudah menghambat growth">Besar, sudah menghambat growth</option>
+                        <option value="Besar, sudah menghambat growth">
+                          Besar, sudah menghambat growth
+                        </option>
                         <option value="Sangat besar, harus segera ditangani">
                           Sangat besar, harus segera ditangani
                         </option>
@@ -541,111 +815,150 @@ const App = () => {
                   </div>
 
                   <div className="sm:col-span-2">
-                    <Button type="submit" variant="primary" size="lg" className="h-13 w-full text-base">
+                    <Button type="submit" variant="primary" size="xl" className="w-full">
                       Lihat Jalur Konsultasi Saya
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
-                    <p className="mt-3 text-sm leading-7 text-[var(--brand-muted)]">
-                      Owner dengan omzet di bawah Rp1 miliar akan berhenti di halaman ini dan tidak
+                    <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
+                      Owner dengan omzet di bawah Rp1 miliar berhenti di halaman ini dan tidak
                       diarahkan ke WhatsApp.
                     </p>
                   </div>
                 </form>
-              </section>
+              </div>
 
-              <div className="hero-portrait-frame relative overflow-hidden rounded-[2rem] border border-[var(--brand-line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-4 shadow-[0_40px_120px_rgba(0,0,0,0.48)]">
-                  <div className="absolute inset-x-6 top-6 z-20 flex items-center justify-between rounded-full border border-[var(--brand-line)] bg-[rgba(5,5,5,0.7)] px-4 py-2 text-[10px] uppercase tracking-[0.26em] text-[var(--brand-muted)]">
-                  <span>Private Strategy Review</span>
-                  <span className="text-[var(--brand-gold)]">Controlled</span>
-                </div>
-
-                <div className="relative overflow-hidden rounded-[1.6rem] bg-[#0d0d0d]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(212,175,106,0.16),transparent_35%)]" />
-                  <img
-                    src="/coach-ferly.png"
-                    alt="Coach Ferly F. Raya"
-                    className="h-[520px] w-full object-cover object-center sm:h-[640px] lg:h-[760px]"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 h-56 bg-[linear-gradient(180deg,rgba(5,5,5,0),rgba(5,5,5,0.9))]" />
-                </div>
-
-                <Card className="relative z-20 -mt-24 ml-auto mr-2 max-w-[340px] border-[var(--brand-line)] bg-[rgba(11,11,11,0.92)] p-5 backdrop-blur-xl lg:-mt-40 lg:mr-4">
-                  <div className="flex items-center justify-between">
-                    <p className="font-ui text-[11px] tracking-[0.2em] text-[var(--brand-gold)]">
-                      Private Executive Snapshot
-                    </p>
-                    <CircleAlert className="h-4 w-4 text-[var(--brand-danger)]" />
-                  </div>
+              <div className="space-y-4">
+                <Card className="rounded-[1.9rem] border-[var(--line)] bg-[var(--panel)] p-6">
+                  <SectionLabel className="border-[var(--line)] bg-transparent text-[var(--muted)]">
+                    Apa yang terjadi setelah submit
+                  </SectionLabel>
                   <div className="mt-5 space-y-4">
-                    {leakPoints.map((item) => (
+                    {[
+                      'Sistem membaca fase bisnis Anda dari omzet, tekanan, dan urgensi.',
+                      'Jalur lanjut dibedakan otomatis: berhenti, prioritas 2, atau prioritas utama.',
+                      'Jika lolos, WhatsApp terbuka dengan konteks yang lebih siap untuk dibaca tim.',
+                    ].map((item) => (
                       <div
-                        key={item.label}
-                        className="rounded-2xl border border-[var(--brand-line)] bg-white/5 px-4 py-3"
+                        key={item}
+                        className="flex items-start gap-3 rounded-2xl border border-[var(--line)] bg-[var(--panel-soft)] px-4 py-3"
                       >
-                        <div className="mb-2 flex items-center justify-between">
-                          <p className="font-display text-xl text-[var(--brand-cream)]">{item.label}</p>
-                          <span className="h-2.5 w-2.5 rounded-full bg-[var(--brand-danger)]" />
-                        </div>
-                        <p className="text-sm leading-6 text-[var(--brand-muted)]">{item.body}</p>
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--accent)]" />
+                        <p className="text-sm leading-6 text-[var(--muted-strong)]">{item}</p>
                       </div>
                     ))}
                   </div>
+                </Card>
+
+                <Card className="rounded-[1.9rem] border-[var(--line)] bg-[var(--panel-soft)] p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[var(--line)] bg-[rgba(255,255,255,0.03)]">
+                      <ShieldCheck className="h-5 w-5 text-[var(--accent)]" />
+                    </div>
+                    <p className="font-display text-[2rem] leading-[0.95] text-[var(--paper)]">
+                      Halaman ini sengaja terasa privat.
+                    </p>
+                  </div>
+                  <p className="mt-4 text-sm leading-7 text-[var(--muted)]">
+                    Bukan broadcast page. Karena itu ritmenya lebih tenang, copy-nya lebih tajam,
+                    dan komponen-komponennya dibuat seperti satu sistem intake yang konsisten.
+                  </p>
                 </Card>
               </div>
             </div>
           </div>
         </section>
 
-        <section
-          id="consultation-path"
-          aria-live="polite"
-          className="px-5 py-6 sm:px-6 lg:px-8"
-        >
+        <section id="consultation-path" aria-live="polite" className="px-5 py-6 sm:px-6 lg:px-8">
           <div
             className={cn(
-              'mx-auto w-full max-w-7xl rounded-[2rem] border px-6 py-8 shadow-[0_30px_80px_rgba(0,0,0,0.3)] sm:px-10 lg:px-14',
+              'mx-auto w-full max-w-7xl rounded-[2.2rem] border px-6 py-8 shadow-[0_30px_80px_rgba(0,0,0,0.3)] sm:px-8 lg:px-12 lg:py-10',
               outcome?.kind === 'reject'
-                ? 'border-[var(--brand-danger)]/30 bg-[rgba(196,81,58,0.08)]'
-                : 'border-[var(--brand-line)] bg-[linear-gradient(135deg,rgba(212,175,106,0.08),rgba(255,255,255,0.02))]',
+                ? 'border-[var(--line)] bg-[rgba(255,255,255,0.03)]'
+                : 'border-[var(--line-strong)] bg-[rgba(214,253,58,0.08)] text-[var(--ink)]',
             )}
           >
-            <p className="font-ui text-[11px] uppercase tracking-[0.28em] text-[var(--brand-gold)]">
+            <p
+              className={cn(
+                'font-ui text-[11px] uppercase tracking-[0.24em]',
+                outcome?.kind === 'reject' ? 'text-[var(--muted)]' : 'text-[rgba(10,10,10,0.58)]',
+              )}
+            >
               Consultation Path
             </p>
+
             <div className="mt-4 grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
               <div className="space-y-4">
-                <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)] sm:text-5xl">
-                  {outcome ? outcome.title : 'Jalur konsultasi Anda akan muncul di sini setelah form dikirim.'}
+                <h2
+                  className={cn(
+                    'font-display text-4xl leading-[0.94] tracking-[-0.05em] sm:text-5xl',
+                    outcome?.kind === 'reject' ? 'text-[var(--paper)]' : 'text-[var(--ink)]',
+                  )}
+                >
+                  {outcome
+                    ? outcome.title
+                    : 'Jalur konsultasi Anda akan muncul di sini setelah form dikirim.'}
                 </h2>
-                <p className="max-w-3xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
+                <p
+                  className={cn(
+                    'max-w-3xl text-base leading-8 sm:text-lg',
+                    outcome?.kind === 'reject'
+                      ? 'text-[var(--muted)]'
+                      : 'text-[rgba(10,10,10,0.72)]',
+                  )}
+                >
                   {outcome
                     ? outcome.body
-                    : 'Setelah form dikirim, Anda akan melihat jalur lanjut yang paling sesuai untuk fase bisnis Anda saat ini.'}
+                    : 'Setelah form dikirim, halaman ini akan menentukan apakah Anda berhenti di sini atau lanjut ke jalur percakapan yang sesuai.'}
                 </p>
                 {outcome?.fallback ? (
-                  <p className="text-sm leading-7 text-[var(--brand-muted)]">{outcome.fallback}</p>
+                  <p
+                    className={cn(
+                      'text-sm leading-7',
+                      outcome.kind === 'reject'
+                        ? 'text-[var(--muted)]'
+                        : 'text-[rgba(10,10,10,0.68)]',
+                    )}
+                  >
+                    {outcome.fallback}
+                  </p>
                 ) : null}
               </div>
 
-              <div className="flex flex-col gap-3 lg:min-w-[220px]">
+              <div className="flex flex-col gap-3 lg:min-w-[240px]">
                 {outcome ? (
                   outcome.kind === 'reject' ? (
-                    <Button variant="outline" size="lg" className="h-12 text-sm" onClick={() => scrollToId('qualification-form')}>
-                      Kembali Ke Form
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      className="h-12"
+                      onClick={() => scrollToId('qualification-form')}
+                    >
+                      Periksa Lagi Jawaban
                     </Button>
                   ) : (
                     <>
-                      <Button asChild variant="primary" size="lg" className="h-12 text-sm">
+                      <Button asChild variant="dark" size="lg" className="h-12">
                         <a href={outcome.href} target="_blank" rel="noreferrer">
                           {outcome.ctaLabel}
                         </a>
                       </Button>
-                      <Button variant="outline" size="lg" className="h-12 text-sm" onClick={() => scrollToId('qualification-form')}>
+                      <Button
+                        variant="secondary"
+                        size="lg"
+                        className="h-12"
+                        onClick={() => scrollToId('qualification-form')}
+                      >
                         Edit Jawaban
                       </Button>
                     </>
                   )
                 ) : (
-                  <Button variant="primary" size="lg" className="h-12 text-sm" onClick={() => scrollToId('qualification-form')}>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="h-12"
+                    onClick={() => scrollToId('qualification-form')}
+                  >
                     Isi Form Dulu
                   </Button>
                 )}
@@ -654,174 +967,26 @@ const App = () => {
           </div>
         </section>
 
-        <section className="px-5 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto grid w-full max-w-7xl gap-12 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)]">
-            <div className="space-y-5">
-              <Badge className="border-[var(--brand-line)] bg-transparent px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-muted)]">
-                Problem Mirror
-              </Badge>
-              <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)] sm:text-5xl">
-                Bisnis Bisa Tembus Miliaran, Tapi Owner Tetap Tidak Tenang
-              </h2>
-              <p className="max-w-xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Banyak bisnis tidak kekurangan omzet. Masalahnya, owner tetap memikul terlalu banyak keputusan,
-                tekanan operasional tidak benar-benar turun, dan keberhasilan bisnis belum terasa sebagai
-                kebebasan di kehidupan pribadi.
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {pressureCards.map((item) => (
-                <Card
-                  key={item.title}
-                  className="border-[var(--brand-line)] bg-[var(--brand-panel)] p-6 before:absolute before:inset-y-6 before:left-0 before:w-px before:bg-[var(--brand-danger)]/60"
-                >
-                  <h3 className="font-display text-2xl text-[var(--brand-cream)]">{item.title}</h3>
-                  <p className="mt-4 text-sm leading-7 text-[var(--brand-muted)]">{item.body}</p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="px-5 py-6 sm:px-6 lg:px-8">
-          <div className="mx-auto w-full max-w-7xl rounded-[2rem] border border-[var(--brand-line)] bg-[linear-gradient(135deg,rgba(212,175,106,0.08),rgba(255,255,255,0.02))] px-6 py-10 shadow-[0_30px_80px_rgba(0,0,0,0.3)] sm:px-10 lg:px-14 lg:py-14">
-            <p className="font-ui text-[11px] uppercase tracking-[0.28em] text-[var(--brand-gold)]">Reframe</p>
-            <div className="mt-4 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
-              <h2 className="font-display text-4xl leading-[0.95] tracking-[-0.06em] text-[var(--brand-cream)] sm:text-5xl lg:text-6xl">
-                Bukan tambah beban lagi.
-                <span className="mt-2 block text-[var(--brand-gold)]">Rapikan sistem bisnis dulu.</span>
-              </h2>
-              <p className="max-w-2xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Fokusnya bukan sekadar menambah penjualan atau aktivitas. Fokusnya merapikan cara bisnis
-                berjalan supaya keputusan, tim, dan tekanan owner tidak terus menumpuk di orang yang sama.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="px-5 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto w-full max-w-7xl">
-            <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-              <div className="space-y-4">
-                <Badge className="border-[var(--brand-line)] bg-transparent px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-muted)]">
-                  3 Sumber Tekanan
-                </Badge>
-                <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)] sm:text-5xl">
-                  3 Sumber Tekanan Yang Paling Sering Menahan Owner
-                </h2>
-              </div>
-              <p className="max-w-2xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Percakapan awal perlu membantu owner melihat bagian mana yang paling sering menarik
-                mereka kembali ke operasional, meski bisnisnya sendiri sudah bertumbuh.
-              </p>
-            </div>
-
-            <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr_1fr]">
-              {diagnosticModules.map((item, index) => (
-                <Card
-                  key={item.title}
-                  className={cn(
-                    'border-[var(--brand-line)] bg-[var(--brand-panel)] p-6 lg:p-7',
-                    index === 1 ? 'lg:translate-y-10' : '',
-                  )}
-                >
-                  <p className="font-ui text-[11px] uppercase tracking-[0.28em] text-[var(--brand-danger)]">
-                    0{index + 1}
-                  </p>
-                  <h3 className="mt-4 font-display text-[2rem] text-[var(--brand-cream)]">{item.title}</h3>
-                  <p className="mt-4 text-sm leading-7 text-[var(--brand-muted)] sm:text-base">{item.body}</p>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="px-5 py-6 sm:px-6 lg:px-8">
-          <div className="mx-auto grid w-full max-w-7xl gap-6 rounded-[2rem] border border-[var(--brand-line)] bg-[rgba(255,255,255,0.03)] px-6 py-10 sm:px-10 lg:grid-cols-[0.9fr_1.1fr] lg:px-14 lg:py-14">
-            <div className="space-y-4">
-              <Badge className="border-[var(--brand-line)] bg-transparent px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-muted)]">
-                Desired State
-              </Badge>
-              <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)] sm:text-5xl">
-                Bisnis Tetap Jalan. Owner Bisa Tidur Lebih Tenang.
-              </h2>
-            </div>
-
-            <div className="space-y-5">
-              <p className="text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Tujuannya bukan janji instan. Tujuannya membantu owner melihat jalur menuju bisnis
-                yang tetap bertumbuh, sambil memberi mereka kembali ruang berpikir, ruang keluarga,
-                dan kemampuan untuk benar-benar lepas dari operasional harian.
-              </p>
-              <div className="inline-flex items-start gap-3 rounded-2xl border border-[var(--brand-line)] bg-[rgba(212,175,106,0.08)] px-4 py-4 text-sm leading-7 text-[var(--brand-cream)]">
-                <ShieldCheck className="mt-1 h-4 w-4 flex-shrink-0 text-[var(--brand-gold)]" />
-                Kualifikasi ini membantu tim Coach Ferly menjaga agar percakapan lanjut tetap serius dan relevan.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="px-5 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto grid w-full max-w-7xl gap-6 lg:grid-cols-2">
-            <Card className="border-[var(--brand-line)] bg-[var(--brand-panel)] p-7 lg:p-8">
-              <Badge className="border-[var(--brand-gold)]/25 bg-[var(--brand-gold)]/10 px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-gold)]">
-                Cocok Untuk Anda
-              </Badge>
-              <h2 className="mt-5 font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)]">
-                Cocok Jika Anda Sudah Punya Bisnis Berjalan
-              </h2>
-              <ul className="mt-8 space-y-4">
-                {fitBullets.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm leading-7 text-[var(--brand-muted)] sm:text-base">
-                    <Check className="mt-1 h-5 w-5 flex-shrink-0 text-[var(--brand-gold)]" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-
-            <Card className="border-[var(--brand-line)] bg-[rgba(196,81,58,0.08)] p-7 lg:p-8">
-              <Badge className="border-[var(--brand-danger)]/30 bg-[var(--brand-danger)]/10 px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-danger)]">
-                Tidak Untuk Anda
-              </Badge>
-              <h2 className="mt-5 font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)]">
-                Tidak Untuk Bisnis Yang Masih Mencari Ide
-              </h2>
-              <ul className="mt-8 space-y-4">
-                {notFitBullets.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm leading-7 text-[var(--brand-muted)] sm:text-base">
-                    <CircleAlert className="mt-1 h-5 w-5 flex-shrink-0 text-[var(--brand-danger)]" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          </div>
-        </section>
-
-        <section className="px-5 py-6 sm:px-6 lg:px-8">
+        <section className="px-5 py-18 sm:px-6 lg:px-8 lg:py-24">
           <div className="mx-auto w-full max-w-7xl">
             <div className="mb-8 space-y-4">
-              <Badge className="border-[var(--brand-line)] bg-transparent px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-muted)]">
-                FAQ
-              </Badge>
-              <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)] sm:text-5xl">
-                Pertanyaan Yang Biasanya Muncul Sebelum Masuk Konsultasi
+              <SectionLabel>FAQ</SectionLabel>
+              <h2 className="font-display text-4xl leading-[0.95] tracking-[-0.05em] text-[var(--paper)] sm:text-5xl">
+                Pertanyaan yang biasanya muncul sebelum lanjut konsultasi.
               </h2>
             </div>
 
             <div className="grid gap-4">
               {faqItems.map((item) => (
-                <Card key={item.question} className="border-[var(--brand-line)] bg-[var(--brand-panel)] p-0">
+                <Card key={item.question} className="rounded-[1.7rem] border-[var(--line)] bg-[var(--panel)] p-0">
                   <details className="group">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 font-display text-xl text-[var(--brand-cream)] marker:content-none">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 font-display text-[1.65rem] leading-[1.05] text-[var(--paper)] marker:content-none">
                       {item.question}
-                      <span className="rounded-full border border-[var(--brand-line)] px-3 py-1 text-xs uppercase tracking-[0.2em] text-[var(--brand-muted)] transition group-open:rotate-180">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--muted)] transition group-open:rotate-45">
                         +
                       </span>
                     </summary>
-                    <div className="border-t border-[var(--brand-line)] px-6 pb-6 pt-4 text-sm leading-7 text-[var(--brand-muted)] sm:text-base">
+                    <div className="border-t border-[var(--line)] px-6 pb-6 pt-4 text-sm leading-7 text-[var(--muted)] sm:text-base">
                       {item.answer}
                     </div>
                   </details>
@@ -831,34 +996,34 @@ const App = () => {
           </div>
         </section>
 
-        <section className="px-5 py-20 sm:px-6 lg:px-8">
-          <div className="mx-auto w-full max-w-7xl rounded-[2rem] border border-[var(--brand-line)] bg-[linear-gradient(135deg,rgba(212,175,106,0.14),rgba(255,255,255,0.03))] px-6 py-10 shadow-[0_40px_120px_rgba(0,0,0,0.36)] sm:px-10 lg:px-14 lg:py-14">
-            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-              <div className="space-y-5">
-                <Badge className="border-[var(--brand-line)] bg-[rgba(5,5,5,0.16)] px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-cream)]">
-                  CTA
-                </Badge>
-                <h2 className="font-display text-4xl leading-[0.95] tracking-[-0.05em] text-[var(--brand-black)] sm:text-5xl lg:text-6xl">
-                  Jika Bisnis Anda Sudah Besar, Pastikan Jalur Berikutnya Juga Tepat
+        <section className="px-5 pb-24 pt-6 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl rounded-[2.3rem] border border-[var(--line-strong)] bg-[rgba(214,253,58,0.08)] px-6 py-10 shadow-[0_40px_120px_rgba(0,0,0,0.36)] sm:px-8 lg:px-12 lg:py-14">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+              <div className="space-y-4">
+                <SectionLabel className="border-[rgba(10,10,10,0.12)] bg-[rgba(255,255,255,0.28)] text-[rgba(10,10,10,0.64)]">
+                  Final CTA
+                </SectionLabel>
+                <h2 className="font-display text-4xl leading-[0.92] tracking-[-0.05em] text-[var(--ink)] sm:text-5xl lg:text-6xl">
+                  Jika bisnis Anda sudah besar, pastikan jalur berikutnya juga presisi.
                 </h2>
-                <p className="max-w-2xl text-base leading-8 text-[rgba(5,5,5,0.76)] sm:text-lg">
-                  Lengkapi private fit check terlebih dulu, lalu lanjut ke jalur percakapan yang
-                  paling sesuai untuk fase bisnis Anda sekarang.
+                <p className="max-w-2xl text-base leading-8 text-[rgba(10,10,10,0.72)] sm:text-lg">
+                  Lengkapi private fit check lebih dulu. Setelah itu, sistem akan menentukan apakah
+                  Anda berhenti di halaman ini atau lanjut ke percakapan yang tepat.
                 </p>
               </div>
 
               <div className="flex flex-col gap-3 lg:items-end">
                 <Button
-                  variant="white"
-                  size="lg"
-                  className="h-14 min-w-[220px] border border-black/10 px-8 text-base shadow-[0_20px_50px_rgba(5,5,5,0.18)]"
+                  variant="dark"
+                  size="xl"
+                  className="min-w-[230px]"
                   onClick={() => scrollToId('qualification-form')}
                 >
                   Isi Form Sekarang
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-                <p className="text-sm text-[rgba(5,5,5,0.62)]">
-                  Tidak ada jalur WhatsApp langsung tanpa kualifikasi.
+                <p className="text-sm text-[rgba(10,10,10,0.64)]">
+                  Jalur WhatsApp tetap tertutup sampai form selesai.
                 </p>
               </div>
             </div>
@@ -866,8 +1031,13 @@ const App = () => {
         </section>
       </main>
 
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--brand-line)] bg-[rgba(5,5,5,0.94)] p-4 backdrop-blur-xl sm:hidden">
-        <Button variant="primary" size="lg" className="h-12 w-full text-sm" onClick={() => scrollToId('qualification-form')}>
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--line)] bg-[rgba(10,10,10,0.94)] p-4 backdrop-blur-xl sm:hidden">
+        <Button
+          variant="primary"
+          size="lg"
+          className="h-12 w-full"
+          onClick={() => scrollToId('qualification-form')}
+        >
           Isi Form Dulu
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>

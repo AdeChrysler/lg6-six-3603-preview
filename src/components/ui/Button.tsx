@@ -5,21 +5,23 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-full font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.99]',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-2xl font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgba(214,253,58,0.14)] disabled:pointer-events-none disabled:opacity-50 active:scale-[0.99]',
   {
     variants: {
       variant: {
         primary:
-          'border border-transparent bg-gradient-to-r from-gold-500 to-gold-600 text-black shadow-lg shadow-gold-900/20 hover:from-gold-600 hover:to-gold-700',
-        outline:
-          'border border-gold-600/30 bg-transparent text-gold-300 hover:bg-gold-600/10 hover:text-gold-200',
-        ghost: 'bg-transparent text-gray-400 hover:bg-white/5 hover:text-white',
-        white: 'border border-black/10 bg-white text-black hover:bg-gray-100',
+          'border border-transparent bg-[var(--accent)] text-[var(--ink)] shadow-[0_18px_50px_rgba(214,253,58,0.16)] hover:-translate-y-px hover:bg-[#e2ff72]',
+        secondary:
+          'border border-[var(--line)] bg-[rgba(255,255,255,0.03)] text-[var(--paper)] hover:bg-[rgba(255,255,255,0.07)]',
+        dark:
+          'border border-[rgba(17,17,17,0.1)] bg-[var(--ink)] text-[var(--paper)] shadow-[0_18px_40px_rgba(17,17,17,0.18)] hover:bg-black',
+        ghost: 'bg-transparent text-[var(--muted)] hover:bg-white/5 hover:text-[var(--paper)]',
       },
       size: {
         default: 'h-10 px-4 py-2 text-sm',
         sm: 'h-9 px-3 text-sm',
-        lg: 'h-12 px-8 text-base',
+        lg: 'h-12 px-6 text-sm',
+        xl: 'h-14 px-8 text-base',
         icon: 'h-10 w-10',
       },
     },
