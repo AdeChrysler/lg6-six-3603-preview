@@ -3,7 +3,7 @@ import { ArrowRight, BadgeAlert, Check, CircleAlert, ShieldCheck } from 'lucide-
 import { Badge } from './components/ui/Badge';
 import { Button } from './components/ui/Button';
 import { Card } from './components/ui/Card';
-import { PRIMARY_CTA_URL, SECONDARY_CTA_URL } from './lib/constants';
+import { PRIMARY_CTA_URL, PRIORITY_CAMPAIGN_TAG, SECONDARY_CTA_URL } from './lib/constants';
 import { cn } from './lib/utils';
 
 type RevenueBand = '<1 Miliar' | '1-3 Miliar' | '3-5 Miliar' | '5-10 Miliar' | '10 Miliar';
@@ -46,68 +46,68 @@ type OutcomeState = {
 
 const leakPoints = [
   {
-    label: 'Stock',
-    title: 'Cash tertahan di inventory',
-    body: 'Inventory terlihat seperti aset, tapi bisa mengunci uang yang dibutuhkan untuk operasional.',
+    label: 'Owner Dependency',
+    title: 'Semua keputusan tetap naik ke owner',
+    body: 'Tim terlihat jalan, tetapi hal penting maupun hal kecil tetap menunggu arah dari Anda.',
   },
   {
-    label: 'Piutang',
-    title: 'Uang sudah tercatat, belum kembali',
-    body: 'Revenue sudah muncul di laporan, tetapi uangnya belum masuk cukup cepat ke rekening bisnis.',
+    label: 'Execution Drift',
+    title: 'Tim sibuk, hasil belum terasa rapi',
+    body: 'Meeting berjalan, orang bekerja, tetapi ritme eksekusi dan standar keputusan belum cukup solid.',
   },
   {
-    label: 'Biaya',
-    title: 'Biaya rutin menekan ruang napas',
-    body: 'Tanpa kontrol biaya yang disiplin, omzet tambahan bisa ikut bocor tanpa terasa.',
+    label: 'Hidden Pressure',
+    title: 'Bisnis terlihat sehat, owner tetap berat',
+    body: 'Dari luar bisnis tampak tumbuh, tetapi di dalam owner sulit lepas, sulit tenang, dan sulit hadir penuh untuk keluarga.',
   },
 ];
 
 const pressureCards = [
   {
-    title: 'Gaji jadi tekanan bulanan',
-    body: 'Tim harus dibayar tepat waktu, tapi posisi cash tidak selalu siap setiap siklus payroll.',
+    title: 'Owner sulit benar-benar off',
+    body: 'Walau bisnis sudah besar, pikiran Anda tetap tertahan di operasional harian dan keputusan yang berulang.',
   },
   {
-    title: 'Cash tertahan di stock',
-    body: 'Barang menumpuk dan uang yang seharusnya bisa berputar tertahan terlalu lama di gudang.',
+    title: 'Tim masih bergantung pada Anda',
+    body: 'Tanpa owner hadir penuh, banyak hal langsung melambat karena standar keputusan belum hidup di tim.',
   },
   {
-    title: 'Piutang tidak balik-balik',
-    body: 'Penjualan sudah terjadi, tetapi kas belum kembali cukup cepat untuk menopang operasi.',
+    title: 'Masalah kecil terasa tidak ada habisnya',
+    body: 'Kerja ulang, miskomunikasi, prioritas berubah-ubah, dan follow-up yang lepas bikin energi owner terus terkuras.',
   },
   {
-    title: 'Biaya tidak terlihat jelas',
-    body: 'Owner menanggung tekanan karena cost control tidak memberi peta yang cukup tegas.',
+    title: 'Rumah ikut merasakan bebannya',
+    body: 'Secara finansial bisnis terlihat berhasil, tetapi waktu, fokus, dan ruang mental owner makin sempit.',
   },
 ];
 
 const diagnosticModules = [
   {
-    title: 'Collection',
-    body: 'Apakah uang dari pelanggan kembali cukup cepat dan cukup disiplin untuk menjaga napas bisnis?',
+    title: 'Decision Flow',
+    body: 'Apakah keputusan penting punya ritme dan standar yang jelas, atau semuanya tetap naik ke owner?',
   },
   {
-    title: 'Inventory',
-    body: 'Apakah stock menyerap cash lebih besar dari yang seharusnya dibanding kecepatannya berputar?',
+    title: 'Team Execution',
+    body: 'Apakah tim benar-benar bisa jalan dengan akuntabilitas, atau hanya terlihat sibuk tanpa gerak yang tajam?',
   },
   {
-    title: 'Cost Control',
-    body: 'Apakah biaya rutin sudah terlihat, dikendalikan, dan diprioritaskan sebelum menekan profit?',
+    title: 'Business Control',
+    body: 'Apakah owner masih memegang kendali sehat atas bisnis, termasuk cash, prioritas, dan tempo pertumbuhan?',
   },
 ];
 
 const fitBullets = [
   'Owner atau director dengan bisnis yang sudah berjalan dan siap bicara angka secara konkret.',
-  'Revenue bulanan sudah signifikan dan tekanan cashflow, stock, atau piutang terasa nyata.',
-  'Ingin membedah bottleneck collection, inventory, dan biaya, bukan mencari motivasi umum.',
+  'Revenue bulanan sudah signifikan dan Anda merasa bisnis terlihat sukses, tetapi secara pribadi masih sulit lepas dari operasional.',
+  'Ingin membedah bottleneck bisnis dan owner dependency, bukan mencari motivasi umum.',
   'Siap masuk ke percakapan awal yang relevan dengan tim Coach Ferly setelah lolos kualifikasi.',
 ];
 
 const notFitBullets = [
   'Belum punya bisnis berjalan atau masih tahap ide.',
   'Mencari webinar gratis, promo, atau penawaran harga instan.',
-  'Tidak siap membuka kondisi omzet, piutang, stock, dan biaya secara jujur.',
-  'Belum punya urgensi untuk merapikan cashflow dan pengambilan keputusan bisnis.',
+  'Tidak siap membuka kondisi omzet, tekanan operasional, dan pola keputusan bisnis secara jujur.',
+  'Belum punya urgensi untuk merapikan sistem bisnis dan cara kerja tim.',
 ];
 
 const faqItems = [
@@ -124,7 +124,7 @@ const faqItems = [
   {
     question: 'Apa yang akan dilihat lebih dulu dalam konsultasi awal?',
     answer:
-      'Tiga area utama: collection, inventory, dan cost control, ditambah besarnya dampak masalah dan urgensi perbaikannya.',
+      'Tiga area utama: owner dependency, ritme eksekusi tim, dan kontrol bisnis, ditambah besarnya dampak masalah dan urgensi perbaikannya.',
   },
 ];
 
@@ -163,9 +163,9 @@ const trimForm = (form: FormState): FormState => ({
 
 const buildPriorityTwoMessage = (form: FormState) =>
   [
-    'Halo Coach Ferly Team, saya sudah mengisi cash flow diagnostic.',
+    'Halo Coach Ferly Team, saya sudah mengisi business bottleneck diagnostic.',
     '',
-    'Campaign: @lg6',
+    `Campaign: ${PRIORITY_CAMPAIGN_TAG}`,
     `Omzet: ${form.omzet}`,
     `Industri: ${form.industri}`,
     `Jumlah tim: ${form.jumlahTim}`,
@@ -182,7 +182,7 @@ const getOutcome = (form: FormState): OutcomeState => {
       kind: 'reject',
       title: 'Saat Ini Belum Jalur Yang Tepat',
       body:
-        'Berdasarkan skala omzet yang Anda pilih, sesi ini belum menjadi jalur paling tepat. Fokus terbaik saat ini adalah memperkuat product-market fit, sales harian, dan cash discipline sebelum masuk ke tahap pembenahan sistem yang lebih berat.',
+        'Berdasarkan skala omzet yang Anda pilih, sesi ini belum menjadi jalur paling tepat. Fokus terbaik saat ini adalah memperkuat offer, penjualan harian, dan ritme eksekusi sebelum masuk ke pembenahan sistem yang lebih berat.',
       ctaLabel: 'Kembali Ke Form',
     };
   }
@@ -203,7 +203,7 @@ const getOutcome = (form: FormState): OutcomeState => {
     kind: 'priority-main',
     title: 'Anda Masuk Jalur Prioritas Utama',
     body:
-      'Skala bisnis Anda sudah cukup besar untuk membahas kebocoran cashflow dan bottleneck bisnis sebagai isu strategis. Lanjutkan ke WhatsApp agar tim Coach Ferly dapat membaca konteks Anda sebelum sesi.',
+      'Skala bisnis Anda sudah cukup besar untuk membahas bottleneck bisnis ini sebagai isu strategis. Lanjutkan ke WhatsApp agar tim Coach Ferly dapat membaca konteks Anda sebelum sesi.',
     ctaLabel: 'Lanjutkan Ke WhatsApp Prioritas',
     href: PRIMARY_CTA_URL,
     fallback: 'Jika tab WhatsApp tidak muncul otomatis, gunakan tombol prioritas di bawah.',
@@ -307,7 +307,7 @@ const App = () => {
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
           <div>
             <p className="font-ui text-[10px] uppercase tracking-[0.32em] text-[var(--brand-muted)]">
-              Cash Flow Diagnostic
+              Business Bottleneck Diagnostic
             </p>
             <p className="font-display text-lg text-[var(--brand-cream)]">Coach Ferly F. Raya</p>
           </div>
@@ -336,19 +336,20 @@ const App = () => {
               <div className="hero-reveal hero-reveal-delay-1 space-y-6">
                 <div className="space-y-4">
                   <h1 className="font-display text-[2.7rem] leading-[0.92] tracking-[-0.05em] text-[var(--brand-cream)] sm:text-6xl lg:max-w-4xl lg:text-[5.4rem]">
-                    Omzet Sudah Besar,
-                    <span className="block text-[var(--brand-gold)]">Tapi Cash Masih Bocor?</span>
+                    Bisnis Terlihat Sudah Jadi,
+                    <span className="block text-[var(--brand-gold)]">Tapi Anda Masih Sulit Lepas.</span>
                   </h1>
                   <p className="max-w-2xl font-ui text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                    Kalau setiap bulan masih deg-degan bayar gaji, cash tertahan di stock, dan piutang tidak
-                    balik-balik, masalahnya mungkin bukan tambah omzet. Sistem cash flow Anda perlu dibedah.
+                    Dari luar bisnis tampak tumbuh, tetapi di dalam owner masih jadi pusat keputusan,
+                    sulit benar-benar off, dan keluarga ikut merasakan bebannya. Masalahnya biasanya
+                    bukan kurang kerja keras, tetapi sistem bisnis yang belum cukup kuat.
                   </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-line)] bg-white/5 px-4 py-2 text-sm text-[var(--brand-cream)]">
                     <ShieldCheck className="h-4 w-4 text-[var(--brand-gold)]" />
-                    Fokus pada collection, inventory, dan kontrol biaya
+                    Fokus pada bottleneck bisnis, ritme eksekusi, dan kontrol owner
                   </div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-line)] bg-white/5 px-4 py-2 text-sm text-[var(--brand-muted)]">
                     <BadgeAlert className="h-4 w-4 text-[var(--brand-danger)]" />
@@ -555,8 +556,8 @@ const App = () => {
               </section>
 
               <div className="hero-portrait-frame relative overflow-hidden rounded-[2rem] border border-[var(--brand-line)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-4 shadow-[0_40px_120px_rgba(0,0,0,0.48)]">
-                <div className="absolute inset-x-6 top-6 z-20 flex items-center justify-between rounded-full border border-[var(--brand-line)] bg-[rgba(5,5,5,0.7)] px-4 py-2 text-[10px] uppercase tracking-[0.26em] text-[var(--brand-muted)]">
-                  <span>Private CFO War Room</span>
+                  <div className="absolute inset-x-6 top-6 z-20 flex items-center justify-between rounded-full border border-[var(--brand-line)] bg-[rgba(5,5,5,0.7)] px-4 py-2 text-[10px] uppercase tracking-[0.26em] text-[var(--brand-muted)]">
+                  <span>Private Strategy Review</span>
                   <span className="text-[var(--brand-gold)]">Controlled</span>
                 </div>
 
@@ -573,7 +574,7 @@ const App = () => {
                 <Card className="relative z-20 -mt-24 ml-auto mr-2 max-w-[340px] border-[var(--brand-line)] bg-[rgba(11,11,11,0.92)] p-5 backdrop-blur-xl lg:-mt-40 lg:mr-4">
                   <div className="flex items-center justify-between">
                     <p className="font-ui text-[11px] uppercase tracking-[0.24em] text-[var(--brand-gold)]">
-                      Cash Leak Diagnostic
+                      Business Bottleneck Review
                     </p>
                     <CircleAlert className="h-4 w-4 text-[var(--brand-danger)]" />
                   </div>
@@ -664,9 +665,9 @@ const App = () => {
                 Bisnis Bisa Tembus Miliaran, Tapi Owner Tetap Tidak Tenang
               </h2>
               <p className="max-w-xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Banyak bisnis tidak kekurangan penjualan. Masalahnya cash tidak terkendali. Barang menumpuk,
-                pembayaran pelanggan lambat, biaya berjalan terus, dan owner tetap menjadi orang pertama yang
-                menanggung tekanan setiap bulan.
+                Banyak bisnis tidak kekurangan omzet. Masalahnya, owner tetap memikul terlalu banyak keputusan,
+                tekanan operasional tidak benar-benar turun, dan keberhasilan bisnis belum terasa sebagai
+                kebebasan di kehidupan pribadi.
               </p>
             </div>
 
@@ -689,12 +690,12 @@ const App = () => {
             <p className="font-ui text-[11px] uppercase tracking-[0.28em] text-[var(--brand-gold)]">Reframe</p>
             <div className="mt-4 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
               <h2 className="font-display text-4xl leading-[0.95] tracking-[-0.06em] text-[var(--brand-cream)] sm:text-5xl lg:text-6xl">
-                Bukan tambah omzet dulu.
-                <span className="mt-2 block text-[var(--brand-gold)]">Rapikan cash flow dulu.</span>
+                Bukan tambah beban lagi.
+                <span className="mt-2 block text-[var(--brand-gold)]">Rapikan sistem bisnis dulu.</span>
               </h2>
               <p className="max-w-2xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Fokusnya bukan sekadar tambah omzet. Fokusnya merapikan sistem collection, inventory,
-                dan kontrol biaya supaya cash bisa bertahan di bisnis, bukan hanya lewat.
+                Fokusnya bukan sekadar menambah penjualan atau aktivitas. Fokusnya merapikan cara bisnis
+                berjalan supaya keputusan, tim, dan tekanan owner tidak terus menumpuk di orang yang sama.
               </p>
             </div>
           </div>
@@ -705,15 +706,15 @@ const App = () => {
             <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div className="space-y-4">
                 <Badge className="border-[var(--brand-line)] bg-transparent px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-muted)]">
-                  3 Titik Bocor
+                  3 Titik Bottleneck
                 </Badge>
                 <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)] sm:text-5xl">
-                  3 Titik Bocor Yang Harus Dilihat
+                  3 Titik Bottleneck Yang Harus Dilihat
                 </h2>
               </div>
               <p className="max-w-2xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Konsultasi awal harus membantu owner melihat di mana cash hilang dari sistem sebelum bisnis dipaksa
-                tumbuh lebih cepat.
+                Konsultasi awal harus membantu owner melihat di mana bisnis tersendat sebelum pertumbuhan
+                berikutnya hanya menambah tekanan baru.
               </p>
             </div>
 
@@ -751,7 +752,8 @@ const App = () => {
             <div className="space-y-5">
               <p className="text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
                 Targetnya bukan membuat klaim instan. Targetnya memberi owner peta yang lebih jelas:
-                cash masuk dari mana, tertahan di mana, bocor di mana, dan keputusan apa yang harus diprioritaskan.
+                tekanan utama datang dari mana, keputusan apa yang terus menumpuk di owner, dan prioritas
+                apa yang paling layak dibenahi lebih dulu.
               </p>
               <div className="inline-flex items-start gap-3 rounded-2xl border border-[var(--brand-line)] bg-[rgba(212,175,106,0.08)] px-4 py-4 text-sm leading-7 text-[var(--brand-cream)]">
                 <ShieldCheck className="mt-1 h-4 w-4 flex-shrink-0 text-[var(--brand-gold)]" />
