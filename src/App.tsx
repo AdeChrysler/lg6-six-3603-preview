@@ -16,7 +16,7 @@ type BusinessChallenge =
   | 'Cashflow bermasalah'
   | 'Growth mentok'
   | 'Kompetitor makin agresif'
-  | 'Belum tahu bottleneck utama';
+  | 'Belum yakin area yang paling menahan saya';
 type BusinessImpact =
   | 'Kecil, belum terlalu terasa'
   | 'Sedang, mulai mengganggu'
@@ -99,7 +99,7 @@ const diagnosticModules = [
 const fitBullets = [
   'Owner atau director dengan bisnis yang sudah berjalan dan siap bicara angka secara konkret.',
   'Revenue bulanan sudah signifikan dan Anda merasa bisnis terlihat sukses, tetapi secara pribadi masih sulit lepas dari operasional.',
-  'Ingin membedah bottleneck bisnis dan owner dependency, bukan mencari motivasi umum.',
+  'Mencari kejelasan mengapa bisnis terus meminta kehadiran Anda, bukan sekadar tambahan motivasi.',
   'Siap masuk ke percakapan awal yang relevan dengan tim Coach Ferly setelah lolos kualifikasi.',
 ];
 
@@ -149,9 +149,6 @@ const requiredFields: Array<{ key: FieldName; label: string }> = [
 const fieldBaseClasses =
   'w-full rounded-2xl border border-[var(--brand-line)] bg-[rgba(255,255,255,0.04)] px-4 py-3 text-sm text-[var(--brand-cream)] outline-none transition focus:border-[var(--brand-gold)] focus:ring-2 focus:ring-[rgba(212,175,106,0.2)]';
 
-const linkButtonClasses =
-  'inline-flex h-12 items-center justify-center rounded-full bg-gradient-to-r from-gold-500 to-gold-600 px-6 text-sm font-bold text-black shadow-lg shadow-gold-900/20 transition hover:from-gold-600 hover:to-gold-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500';
-
 const trimForm = (form: FormState): FormState => ({
   omzet: form.omzet,
   industri: form.industri.trim(),
@@ -163,7 +160,7 @@ const trimForm = (form: FormState): FormState => ({
 
 const buildPriorityTwoMessage = (form: FormState) =>
   [
-    'Halo Coach Ferly Team, saya sudah mengisi business bottleneck diagnostic.',
+    'Halo Coach Ferly Team, saya sudah mengisi private fit check.',
     '',
     `Campaign: ${PRIORITY_CAMPAIGN_TAG}`,
     `Omzet: ${form.omzet}`,
@@ -192,7 +189,7 @@ const getOutcome = (form: FormState): OutcomeState => {
       kind: 'priority-2',
       title: 'Anda Masuk Jalur Prioritas 2',
       body:
-        'Bisnis Anda sudah melewati fase awal dan mulai membutuhkan sistem kerja yang lebih rapi. Tim Coach Ferly dapat membantu menilai apakah bottleneck utama Anda sudah siap dibahas dalam sesi strategis.',
+        'Bisnis Anda sudah melewati fase awal. Tim Coach Ferly dapat membantu menilai apakah sesi lanjut ini tepat untuk membantu Anda membangun bisnis yang tetap bertumbuh tanpa terus bergantung pada Anda di setiap titik.',
       ctaLabel: 'Lanjutkan Via WhatsApp',
       href: `${SECONDARY_CTA_URL}?text=${encodeURIComponent(buildPriorityTwoMessage(form))}`,
       fallback: 'Jika WhatsApp tidak terbuka otomatis, gunakan tombol di bawah untuk melanjutkan manual.',
@@ -203,7 +200,7 @@ const getOutcome = (form: FormState): OutcomeState => {
     kind: 'priority-main',
     title: 'Anda Masuk Jalur Prioritas Utama',
     body:
-      'Skala bisnis Anda sudah cukup besar untuk membahas bottleneck bisnis ini sebagai isu strategis. Lanjutkan ke WhatsApp agar tim Coach Ferly dapat membaca konteks Anda sebelum sesi.',
+      'Skala bisnis Anda sudah cukup besar untuk masuk ke percakapan strategis yang lebih serius. Lanjutkan ke WhatsApp agar tim Coach Ferly bisa membaca konteks Anda sebelum sesi.',
     ctaLabel: 'Lanjutkan Ke WhatsApp Prioritas',
     href: PRIMARY_CTA_URL,
     fallback: 'Jika tab WhatsApp tidak muncul otomatis, gunakan tombol prioritas di bawah.',
@@ -306,8 +303,8 @@ const App = () => {
       <header className="sticky top-0 z-40 border-b border-[var(--brand-line)] bg-[rgba(5,5,5,0.82)] backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
           <div>
-            <p className="font-ui text-[10px] uppercase tracking-[0.32em] text-[var(--brand-muted)]">
-              Business Bottleneck Diagnostic
+            <p className="font-ui text-[10px] tracking-[0.28em] text-[var(--brand-muted)]">
+              Private fit check for scaling owners
             </p>
             <p className="font-display text-lg text-[var(--brand-cream)]">Coach Ferly F. Raya</p>
           </div>
@@ -328,14 +325,14 @@ const App = () => {
           <div className="mx-auto grid w-full max-w-7xl items-start gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(380px,0.98fr)] lg:gap-8">
             <div className="relative z-10 flex flex-col gap-8">
               <div className="hero-reveal">
-                <Badge className="border-[var(--brand-gold)]/25 bg-[var(--brand-gold)]/10 px-4 py-1 text-[11px] uppercase tracking-[0.28em] text-[var(--brand-gold)]">
+                <Badge className="border-[var(--brand-gold)]/25 bg-[var(--brand-gold)]/10 px-4 py-1 text-[11px] tracking-[0.22em] text-[var(--brand-gold)]">
                   Untuk Owner Bisnis Multi-Miliar
                 </Badge>
               </div>
 
               <div className="hero-reveal hero-reveal-delay-1 space-y-6">
                 <div className="space-y-4">
-                  <h1 className="font-display text-[2.7rem] leading-[0.92] tracking-[-0.05em] text-[var(--brand-cream)] sm:text-6xl lg:max-w-4xl lg:text-[5.4rem]">
+                  <h1 className="font-display text-[2.45rem] leading-[0.96] tracking-[-0.04em] text-[var(--brand-cream)] sm:text-[4.35rem] lg:max-w-4xl lg:text-[5rem]">
                     Bisnis Terlihat Sudah Jadi,
                     <span className="block text-[var(--brand-gold)]">Tapi Anda Masih Sulit Lepas.</span>
                   </h1>
@@ -349,7 +346,7 @@ const App = () => {
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-line)] bg-white/5 px-4 py-2 text-sm text-[var(--brand-cream)]">
                     <ShieldCheck className="h-4 w-4 text-[var(--brand-gold)]" />
-                    Fokus pada bottleneck bisnis, ritme eksekusi, dan kontrol owner
+                    Untuk owner yang bisnisnya sudah besar, tetapi hidupnya belum terasa lebih ringan
                   </div>
                   <div className="inline-flex items-center gap-2 rounded-full border border-[var(--brand-line)] bg-white/5 px-4 py-2 text-sm text-[var(--brand-muted)]">
                     <BadgeAlert className="h-4 w-4 text-[var(--brand-danger)]" />
@@ -365,7 +362,7 @@ const App = () => {
                   className="h-14 px-8 text-base shadow-[0_24px_60px_rgba(212,175,106,0.22)]"
                   onClick={() => scrollToId('qualification-form')}
                 >
-                  Mulai Diagnosa
+                  Cek Kecocokan Saya
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
                 <p className="font-ui text-sm text-[var(--brand-muted)]">
@@ -396,23 +393,23 @@ const App = () => {
                 className="rounded-[2rem] border border-[var(--brand-line)] bg-[rgba(8,8,8,0.92)] p-6 shadow-[0_40px_120px_rgba(0,0,0,0.42)] backdrop-blur-xl sm:p-7"
               >
                 <div className="space-y-4">
-                  <Badge className="border-[var(--brand-gold)]/25 bg-[var(--brand-gold)]/10 px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-gold)]">
-                    Qualification Form
+                  <Badge className="border-[var(--brand-gold)]/25 bg-[var(--brand-gold)]/10 px-4 py-1 tracking-[0.2em] text-[var(--brand-gold)]">
+                    Private Fit Check
                   </Badge>
                   <div className="space-y-2">
                     <h2 id="form-title" className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)]">
-                      Cek Apakah Sesi Ini Relevan Untuk Kondisi Bisnis Anda
+                      Lihat Apakah Sesi Ini Tepat Untuk Fase Bisnis Anda
                     </h2>
                     <p className="text-sm leading-7 text-[var(--brand-muted)] sm:text-base">
-                      Jawab enam pertanyaan singkat. Kami hanya mengarahkan owner ke jalur yang sesuai
-                      dengan skala dan urgensi masalahnya.
+                      Jawab enam pertanyaan singkat dan privat. Ini membantu tim menilai apakah
+                      percakapan lanjut memang relevan untuk fase bisnis Anda sekarang.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[var(--brand-line)] bg-white/5 p-4">
                     <div className="mb-3 flex items-center justify-between gap-4 text-sm text-[var(--brand-muted)]">
                       <span>{completedCount}/6 bidang terisi</span>
-                      <span>Pra-kualifikasi wajib</span>
+                      <span>Kelayakan privat</span>
                     </div>
                     <div className="h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
                       <div
@@ -513,7 +510,7 @@ const App = () => {
                         <option value="Cashflow bermasalah">Cashflow bermasalah</option>
                         <option value="Growth mentok">Growth mentok</option>
                         <option value="Kompetitor makin agresif">Kompetitor makin agresif</option>
-                        <option value="Belum tahu bottleneck utama">Belum tahu bottleneck utama</option>
+                        <option value="Belum yakin area yang paling menahan saya">Belum yakin area yang paling menahan saya</option>
                       </select>
                     </Field>
                   </div>
@@ -573,8 +570,8 @@ const App = () => {
 
                 <Card className="relative z-20 -mt-24 ml-auto mr-2 max-w-[340px] border-[var(--brand-line)] bg-[rgba(11,11,11,0.92)] p-5 backdrop-blur-xl lg:-mt-40 lg:mr-4">
                   <div className="flex items-center justify-between">
-                    <p className="font-ui text-[11px] uppercase tracking-[0.24em] text-[var(--brand-gold)]">
-                      Business Bottleneck Review
+                    <p className="font-ui text-[11px] tracking-[0.2em] text-[var(--brand-gold)]">
+                      Private Executive Snapshot
                     </p>
                     <CircleAlert className="h-4 w-4 text-[var(--brand-danger)]" />
                   </div>
@@ -622,7 +619,7 @@ const App = () => {
                 <p className="max-w-3xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
                   {outcome
                     ? outcome.body
-                    : 'Outcome hanya akan menampilkan salah satu dari tiga jalur: nurture tanpa WhatsApp, WhatsApp prioritas 2, atau jalur prioritas utama ke tim Coach Ferly.'}
+                    : 'Setelah form dikirim, Anda akan melihat jalur lanjut yang paling sesuai untuk fase bisnis Anda saat ini.'}
                 </p>
                 {outcome?.fallback ? (
                   <p className="text-sm leading-7 text-[var(--brand-muted)]">{outcome.fallback}</p>
@@ -637,9 +634,11 @@ const App = () => {
                     </Button>
                   ) : (
                     <>
-                      <a className={linkButtonClasses} href={outcome.href} target="_blank" rel="noreferrer">
-                        {outcome.ctaLabel}
-                      </a>
+                      <Button asChild variant="primary" size="lg" className="h-12 text-sm">
+                        <a href={outcome.href} target="_blank" rel="noreferrer">
+                          {outcome.ctaLabel}
+                        </a>
+                      </Button>
                       <Button variant="outline" size="lg" className="h-12 text-sm" onClick={() => scrollToId('qualification-form')}>
                         Edit Jawaban
                       </Button>
@@ -706,15 +705,15 @@ const App = () => {
             <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div className="space-y-4">
                 <Badge className="border-[var(--brand-line)] bg-transparent px-4 py-1 uppercase tracking-[0.24em] text-[var(--brand-muted)]">
-                  3 Titik Bottleneck
+                  3 Sumber Tekanan
                 </Badge>
                 <h2 className="font-display text-4xl leading-tight tracking-[-0.05em] text-[var(--brand-cream)] sm:text-5xl">
-                  3 Titik Bottleneck Yang Harus Dilihat
+                  3 Sumber Tekanan Yang Paling Sering Menahan Owner
                 </h2>
               </div>
               <p className="max-w-2xl text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Konsultasi awal harus membantu owner melihat di mana bisnis tersendat sebelum pertumbuhan
-                berikutnya hanya menambah tekanan baru.
+                Percakapan awal perlu membantu owner melihat bagian mana yang paling sering menarik
+                mereka kembali ke operasional, meski bisnisnya sendiri sudah bertumbuh.
               </p>
             </div>
 
@@ -751,9 +750,9 @@ const App = () => {
 
             <div className="space-y-5">
               <p className="text-base leading-8 text-[var(--brand-muted)] sm:text-lg">
-                Targetnya bukan membuat klaim instan. Targetnya memberi owner peta yang lebih jelas:
-                tekanan utama datang dari mana, keputusan apa yang terus menumpuk di owner, dan prioritas
-                apa yang paling layak dibenahi lebih dulu.
+                Tujuannya bukan janji instan. Tujuannya membantu owner melihat jalur menuju bisnis
+                yang tetap bertumbuh, sambil memberi mereka kembali ruang berpikir, ruang keluarga,
+                dan kemampuan untuk benar-benar lepas dari operasional harian.
               </p>
               <div className="inline-flex items-start gap-3 rounded-2xl border border-[var(--brand-line)] bg-[rgba(212,175,106,0.08)] px-4 py-4 text-sm leading-7 text-[var(--brand-cream)]">
                 <ShieldCheck className="mt-1 h-4 w-4 flex-shrink-0 text-[var(--brand-gold)]" />
@@ -840,10 +839,11 @@ const App = () => {
                   CTA
                 </Badge>
                 <h2 className="font-display text-4xl leading-[0.95] tracking-[-0.05em] text-[var(--brand-black)] sm:text-5xl lg:text-6xl">
-                  Ingin Tahu Apakah Sistem Anda Bocor?
+                  Jika Bisnis Anda Sudah Besar, Pastikan Jalur Berikutnya Juga Tepat
                 </h2>
                 <p className="max-w-2xl text-base leading-8 text-[rgba(5,5,5,0.76)] sm:text-lg">
-                  Lengkapi kualifikasi lebih dulu, lalu lanjut ke jalur konsultasi yang sesuai untuk kondisi bisnis Anda.
+                  Lengkapi private fit check terlebih dulu, lalu lanjut ke jalur percakapan yang
+                  paling sesuai untuk fase bisnis Anda sekarang.
                 </p>
               </div>
 

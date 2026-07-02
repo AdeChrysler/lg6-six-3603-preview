@@ -1,30 +1,32 @@
 import React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'success' | 'warning' | 'outline';
-}
+const badgeVariants = cva(
+  'inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium tracking-[0.18em] transition-colors',
+  {
+    variants: {
+      variant: {
+        default: 'border-gold-500/20 bg-gold-500/10 text-gold-300',
+        success: 'border-green-500/20 bg-green-500/10 text-green-300',
+        warning: 'border-red-500/20 bg-red-500/10 text-red-300',
+        outline: 'border-gray-700 bg-transparent text-gray-400',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  },
+);
 
-const Badge: React.FC<BadgeProps> = ({ className, variant = 'default', children, ...props }) => {
-  const variants = {
-    default: "bg-gold-500/10 text-gold-400 border-gold-500/20",
-    success: "bg-green-500/10 text-green-400 border-green-500/20",
-    warning: "bg-red-500/10 text-red-400 border-red-500/20",
-    outline: "bg-transparent border-gray-700 text-gray-400",
-  };
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
 
-  return (
-    <div
-      className={cn(
-        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-        variants[variant],
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-};
+const Badge: React.FC<BadgeProps> = ({ className, variant, children, ...props }) => (
+  <div className={cn(badgeVariants({ variant }), className)} {...props}>
+    {children}
+  </div>
+);
 
 export { Badge };

@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -9,8 +10,8 @@
   --brand-panel: rgba(255, 255, 255, 0.045);
   --brand-line: rgba(232, 223, 200, 0.14);
   --brand-muted: rgba(232, 223, 200, 0.74);
-  --brand-font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  --brand-font-ui: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  --brand-font-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --brand-font-ui: "Manrope", "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
 }
 
 * {

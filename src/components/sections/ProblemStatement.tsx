@@ -13,7 +13,7 @@ const problems = [
   },
   {
     icon: UserX,
-    title: 'Owner = Bottleneck',
+    title: 'Owner = Titik Tumpu',
     desc: 'Bisnis sudah besar, tapi semua keputusan masih lewat Anda. Tanpa Anda, operasional berhenti — dan itu bukan tanda sukses, itu tanda sistem belum jadi.',
   },
   {
