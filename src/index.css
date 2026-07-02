@@ -1,12 +1,35 @@
 @import "tailwindcss";
 
+:root {
+  --lg6-black: #050505;
+  --lg6-cream: #e8dfc8;
+  --lg6-gold: #d4af6a;
+  --lg6-danger: #c4513a;
+  --lg6-panel: rgba(255, 255, 255, 0.045);
+  --lg6-line: rgba(232, 223, 200, 0.14);
+  --lg6-muted: rgba(232, 223, 200, 0.74);
+  --lg6-font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --lg6-font-ui: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
+  background: var(--lg6-black);
 }
 
 body {
-  background-color: #000000;
-  color: #fff;
+  margin: 0;
+  background:
+    radial-gradient(circle at top left, rgba(212, 175, 106, 0.14), transparent 26%),
+    radial-gradient(circle at top right, rgba(196, 81, 58, 0.1), transparent 22%),
+    linear-gradient(180deg, #0b0b0b 0%, #050505 100%);
+  color: var(--lg6-cream);
+  font-family: var(--lg6-font-ui);
+  overflow-x: hidden;
 }
 
 @theme {
@@ -22,25 +45,93 @@ body {
   --color-dark-700: #1F2937;
 }
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
+::selection {
+  background: rgba(212, 175, 106, 0.3);
+  color: var(--lg6-cream);
+}
+
+a {
+  color: inherit;
+}
+
+button,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.font-display {
+  font-family: var(--lg6-font-display);
+}
+
+.font-ui {
+  font-family: var(--lg6-font-ui);
+}
+
+.lg6-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 120px 120px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.2), transparent 100%);
+  opacity: 0.24;
+}
+
+.hero-portrait-frame::after {
+  content: "";
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+  width: 9rem;
+  height: 9rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 106, 0.18);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
   }
 
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.animate-gradient {
-  animation: gradient 6s ease infinite;
+.hero-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: hero-rise 0.72s ease forwards;
 }
 
-.bg-clip-text {
-  -webkit-background-clip: text;
-  background-clip: text;
+.hero-reveal-delay-1 {
+  animation-delay: 200ms;
+}
+
+.hero-reveal-delay-2 {
+  animation-delay: 400ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-reveal {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding-bottom: 5.5rem;
+  }
 }
