@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --lg6-black: #050505;
-  --lg6-cream: #e8dfc8;
-  --lg6-gold: #d4af6a;
-  --lg6-danger: #c4513a;
-  --lg6-panel: rgba(255, 255, 255, 0.045);
-  --lg6-line: rgba(232, 223, 200, 0.14);
-  --lg6-muted: rgba(232, 223, 200, 0.74);
-  --lg6-font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  --lg6-font-ui: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+  --brand-black: #050505;
+  --brand-cream: #e8dfc8;
+  --brand-gold: #d4af6a;
+  --brand-danger: #c4513a;
+  --brand-action: #39634f;
+  --brand-panel: rgba(255, 255, 255, 0.045);
+  --brand-line: rgba(232, 223, 200, 0.14);
+  --brand-muted: rgba(232, 223, 200, 0.74);
+  --brand-font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --brand-font-ui: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
 }
 
 * {
@@ -18,7 +19,7 @@
 
 html {
   scroll-behavior: smooth;
-  background: var(--lg6-black);
+  background: var(--brand-black);
 }
 
 body {
@@ -27,8 +28,8 @@ body {
     radial-gradient(circle at top left, rgba(212, 175, 106, 0.14), transparent 26%),
     radial-gradient(circle at top right, rgba(196, 81, 58, 0.1), transparent 22%),
     linear-gradient(180deg, #0b0b0b 0%, #050505 100%);
-  color: var(--lg6-cream);
-  font-family: var(--lg6-font-ui);
+  color: var(--brand-cream);
+  font-family: var(--brand-font-ui);
   overflow-x: hidden;
 }
 
@@ -47,7 +48,7 @@ body {
 
 ::selection {
   background: rgba(212, 175, 106, 0.3);
-  color: var(--lg6-cream);
+  color: var(--brand-cream);
 }
 
 a {
@@ -60,14 +61,14 @@ summary {
 }
 
 .font-display {
-  font-family: var(--lg6-font-display);
+  font-family: var(--brand-font-display);
 }
 
 .font-ui {
-  font-family: var(--lg6-font-ui);
+  font-family: var(--brand-font-ui);
 }
 
-.lg6-bg {
+.campaign-bg {
   position: fixed;
   inset: 0;
   pointer-events: none;
